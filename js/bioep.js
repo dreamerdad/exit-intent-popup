@@ -228,30 +228,37 @@ window.bioEp = {
 		this.cookieExp = (typeof opts.cookieExp === 'undefined') ? this.cookieExp : opts.cookieExp;
 	},
 	
-	// Initialize
-	init: function(opts) {
-		// Once the DOM has fully loaded
-		window.addEventListener("DOMContentLoaded", function() {
-			// Handle options
-			if(typeof opts !== 'undefined')
-				bioEp.setOptions(opts);
-				
-			// Handle the cookie
-			if(bioEp.checkCookie()) return;
-			
-			// Add the CSS
-			bioEp.addCSS();
-			
-			// Add the popup
-			bioEp.addPopup();
-			
-			// Load events
-			setTimeout(function() { 
-				bioEp.loadEvents();
-
-				if(bioEp.showOnDelay)
-					bioEp.showPopup();
-			}, bioEp.delay * 1000);
-		});
-	}
-}
+	        // Handle DOM loading
+        runScript: function(opts) {
+                // Handle options
+                if(typeof opts !== 'undefined')
+                        bioEp.setOptions(opts);
+                               
+                // Handle the cookie
+                if(bioEp.checkCookie()) return;
+                       
+                // Add the CSS
+                bioEp.addCSS();
+                       
+                // Add the popup
+                bioEp.addPopup();
+                       
+                // Load events
+                setTimeout(function() {
+                        bioEp.loadEvents();
+ 
+                        if(bioEp.showOnDelay)
+                                bioEp.showPopup();
+                }, bioEp.delay * 1000);
+        },
+ 
+        // Initialize
+        init: function(opts) {
+                // Once the DOM has fully loaded
+                if(document.readyState == "interactive" || document.readyState == "complete")
+                        this.runScript(opts);
+                else
+                        window.addEventListener("DOMContentLoaded", function() {
+                                this.runScript(opts);
+                        }.bind(this));
+        }
